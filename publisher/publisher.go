@@ -7,41 +7,37 @@ import (
 	"github.com/streadway/amqp"
 )
 
-func publishMessage() {
-	// Estabelece a conexão com o servidor RabbitMQ
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+func PublishMessage() {
+	// Establish connection to the RabbitMQ server
+	conn, err := amqp.Dial("amqp://guest:guest@172.34.0.4:5672/")
 	if err != nil {
-		log.Fatalf("Falha ao estabelecer conexão com o RabbitMQ: %v", err)
+		log.Fatalf("Failed to establish connection to RabbitMQ: %v", err)
 	}
 	defer conn.Close()
 
-	// Cria um canal de comunicação
+	// Create a communication channel
 	ch, err := conn.Channel()
 	if err != nil {
-		log.Fatalf("Falha ao abrir canal: %v", err)
+		log.Fatalf("Failed to open channel: %v", err)
 	}
 	defer ch.Close()
 
-	// Declara uma fila
-	queueName := "minha_fila"
+	// Declare a queue
+	queueName := "my_queue"
 	_, err = ch.QueueDeclare(queueName, false, false, false, false, nil)
 	if err != nil {
-		log.Fatalf("Falha ao declarar a fila: %v", err)
+		log.Fatalf("Failed to declare the queue: %v", err)
 	}
 
-	// Publica uma mensagem na fila
-	message := "Olá, RabbitMQ!"
+	// Publish a message to the queue
+	message := "Hello, RabbitMQ!"
 	err = ch.Publish("", queueName, false, false, amqp.Publishing{
 		ContentType: "text/plain",
 		Body:        []byte(message),
 	})
 	if err != nil {
-		log.Fatalf("Falha ao publicar mensagem: %v", err)
+		log.Fatalf("Failed to publish message: %v", err)
 	}
 
-	fmt.Println("Mensagem publicada com sucesso!")
-}
-
-func main() {
-	publishMessage()
+	fmt.Println("Message published successfully!")
 }

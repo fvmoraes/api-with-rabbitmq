@@ -7,40 +7,36 @@ import (
 	"github.com/streadway/amqp"
 )
 
-func consumeMessages() {
-	// Estabelece a conexão com o servidor RabbitMQ
-	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
+func ConsumeMessages() {
+	// Establish connection to the RabbitMQ server
+	conn, err := amqp.Dial("amqp://guest:guest@172.34.0.4:5672/")
 	if err != nil {
-		log.Fatalf("Falha ao estabelecer conexão com o RabbitMQ: %v", err)
+		log.Fatalf("Failed to establish connection to RabbitMQ: %v", err)
 	}
 	defer conn.Close()
 
-	// Cria um canal de comunicação
+	// Create a communication channel
 	ch, err := conn.Channel()
 	if err != nil {
-		log.Fatalf("Falha ao abrir canal: %v", err)
+		log.Fatalf("Failed to open channel: %v", err)
 	}
 	defer ch.Close()
 
-	// Declara uma fila
-	queueName := "minha_fila"
+	// Declare a queue
+	queueName := "my_queue"
 	_, err = ch.QueueDeclare(queueName, false, false, false, false, nil)
 	if err != nil {
-		log.Fatalf("Falha ao declarar a fila: %v", err)
+		log.Fatalf("Failed to declare the queue: %v", err)
 	}
 
-	// Consome mensagens da fila
+	// Consume messages from the queue
 	msgs, err := ch.Consume(queueName, "", true, false, false, false, nil)
 	if err != nil {
-		log.Fatalf("Falha ao consumir mensagens: %v", err)
+		log.Fatalf("Failed to consume messages: %v", err)
 	}
 
-	// Processa as mensagens recebidas
+	// Process received messages
 	for msg := range msgs {
-		fmt.Printf("Mensagem recebida: %s\n", msg.Body)
+		fmt.Printf("Received message: %s\n", msg.Body)
 	}
-}
-
-func main() {
-	consumeMessages()
 }
