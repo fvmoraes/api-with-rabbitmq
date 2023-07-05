@@ -12,10 +12,9 @@ services:
       - "5432:5432"
     networks:
       backend:
-        ipv4_address: 172.33.0.2
+        ipv4_address: 172.34.0.2
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
-    # command: ["sh", "-c", "chmod -R 777 /var/lib/postgresql/data"]
 #pgadmin
   pgadmin:
     image: dpage/pgadmin4
@@ -27,7 +26,7 @@ services:
       - "54321:80"
     networks:
       backend:
-        ipv4_address: 172.33.0.3
+        ipv4_address: 172.34.0.3
     volumes:
        - ./configs_pgadmin/servers.json:/pgadmin4/servers.json
        - ./configs_pgadmin/pgpass:/pgpass
@@ -45,7 +44,7 @@ services:
       - "15672:15672"
     networks:
       backend:
-        ipv4_address: 172.33.0.4
+        ipv4_address: 172.34.0.4
     volumes:
       - ./rabbitmq_data:/var/lib/rabbitmq
     depends_on:
@@ -63,7 +62,7 @@ services:
       - "9000"
     networks:
       backend:
-        ipv4_address: 172.33.0.5
+        ipv4_address: 172.34.0.5
     depends_on:
       - postgres
       - rabbitmq
@@ -73,5 +72,5 @@ networks:
     driver: bridge
     ipam:
      config:
-       - subnet: 172.33.0.0/24
-         gateway: 172.33.0.1
+       - subnet: 172.34.0.0/24
+         gateway: 172.34.0.1

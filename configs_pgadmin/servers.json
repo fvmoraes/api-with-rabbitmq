@@ -3,7 +3,7 @@
       "1": {
         "Name": "api-go-gin_pgadmin",
         "Group": "Servers",
-        "Host": "172.33.0.2",
+        "Host": "172.34.0.2",
         "Port": 5432,
         "MaintenanceDB": "foobar",
         "Username": "foobar",
