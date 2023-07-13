@@ -9,17 +9,26 @@ import (
 )
 
 func main() {
-	for true {
-		fmt.Println("Working!")
+	fmt.Println("Working app!")
+	callPublishers()
+}
 
-		waitSeconds(10)
-		publisher.PublishMessage()
+func callPublishers() {
+	fmt.Println("Call publisher!")
+	waitSeconds(5)
+	publisher.PublishMessage()
 
-		fmt.Println("Check Rabbit!")
+	fmt.Println("Check Rabbit!")
+	callConsumers()
+}
 
-		waitSeconds(10)
-		consumer.ConsumeMessages()
-	}
+func callConsumers() {
+	fmt.Println("Call consumer!")
+	waitSeconds(5)
+	consumer.ConsumeMessages()
+
+	fmt.Println("Check Rabbit!")
+	callPublishers()
 }
 
 func waitSeconds(seconds int) {

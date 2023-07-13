@@ -8,6 +8,7 @@ import (
 )
 
 func ConsumeMessages() {
+	fmt.Println("Consuming messages")
 	// Establish connection to the RabbitMQ server
 	conn, err := amqp.Dial("amqp://guest:guest@172.34.0.4:5672/")
 	if err != nil {
