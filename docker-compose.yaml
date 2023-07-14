@@ -49,13 +49,13 @@ services:
       - ./rabbitmq_data:/var/lib/rabbitmq
     depends_on:
       - postgres
-#go-app
-  app:
+#go-app-pub
+  apppub:
     build:
       context: .
-      dockerfile: golang.Dockerfile
-    image: app-foobar
-    container_name: app_api-with-rabbitmq
+      dockerfile: foobarpub.Dockerfile
+    image: foobarpub
+    container_name: foobapub_api-with-rabbitmq
     restart: unless-stopped
     tty: true
     ports:
@@ -63,6 +63,23 @@ services:
     networks:
       backend:
         ipv4_address: 172.34.0.5
+    depends_on:
+      - postgres
+      - rabbitmq
+#go-app-sub
+  appsub:
+    build:
+      context: .
+      dockerfile: foobarsub.Dockerfile
+    image: foobarsub
+    container_name: foobarsub_api-with-rabbitmq
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "9000"
+    networks:
+      backend:
+        ipv4_address: 172.34.0.6
     depends_on:
       - postgres
       - rabbitmq

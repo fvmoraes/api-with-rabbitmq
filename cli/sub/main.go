@@ -5,30 +5,13 @@ import (
 	"time"
 
 	"github.com/fvmoraes/api-with-rabbitmq/consumer"
-	"github.com/fvmoraes/api-with-rabbitmq/publisher"
 )
 
 func main() {
-	fmt.Println("Working app!")
-	callPublishers()
-}
-
-func callPublishers() {
-	fmt.Println("Call publisher!")
-	waitSeconds(5)
-	publisher.PublishMessage()
-
-	fmt.Println("Check Rabbit!")
-	callConsumers()
-}
-
-func callConsumers() {
-	fmt.Println("Call consumer!")
+	fmt.Println("Working sub!")
 	waitSeconds(5)
 	consumer.ConsumeMessages()
-
 	fmt.Println("Check Rabbit!")
-	callPublishers()
 }
 
 func waitSeconds(seconds int) {
