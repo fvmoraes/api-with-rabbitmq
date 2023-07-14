@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/fvmoraes/api-with-rabbitmq/consumer"
+	"github.com/fvmoraes/api-with-rabbitmq/internal/consumer"
 )
 
 func main() {

@@ -14,7 +14,7 @@ services:
       backend:
         ipv4_address: 172.34.0.2
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - ./build/volumes/postgres_data:/var/lib/postgresql/data
 #pgadmin
   pgadmin:
     image: dpage/pgadmin4
@@ -28,8 +28,8 @@ services:
       backend:
         ipv4_address: 172.34.0.3
     volumes:
-       - ./configs_pgadmin/servers.json:/pgadmin4/servers.json
-       - ./configs_pgadmin/pgpass:/pgpass
+       - ./configs/pgadmin/servers.json:/pgadmin4/servers.json
+       - ./configs/pgadmin/pgpass:/pgpass
     depends_on:
       - postgres
 #rabbit-mq
@@ -46,14 +46,14 @@ services:
       backend:
         ipv4_address: 172.34.0.4
     volumes:
-      - ./rabbitmq_data:/var/lib/rabbitmq
+      - ./build/volumes/rabbitmq_data:/var/lib/rabbitmq
     depends_on:
       - postgres
 #go-app-pub
   apppub:
     build:
       context: .
-      dockerfile: foobarpub.Dockerfile
+      dockerfile: build/foobarpub.Dockerfile
     image: foobarpub
     container_name: foobapub_api-with-rabbitmq
     restart: unless-stopped
@@ -70,7 +70,7 @@ services:
   appsub:
     build:
       context: .
-      dockerfile: foobarsub.Dockerfile
+      dockerfile: build/foobarsub.Dockerfile
     image: foobarsub
     container_name: foobarsub_api-with-rabbitmq
     restart: unless-stopped
