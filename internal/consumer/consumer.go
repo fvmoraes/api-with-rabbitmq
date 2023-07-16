@@ -2,42 +2,31 @@ package consumer
 
 import (
 	"fmt"
-	"log"
 
-	"github.com/streadway/amqp"
+	"github.com/fvmoraes/api-with-rabbitmq/internal/error"
+	"github.com/fvmoraes/api-with-rabbitmq/internal/logs"
+	"github.com/fvmoraes/api-with-rabbitmq/internal/rabbitmq"
 )
 
 func ConsumeMessages() {
 	fmt.Println("Consuming messages")
-	// Establish connection to the RabbitMQ server
-	conn, err := amqp.Dial("amqp://guest:guest@172.34.0.4:5672/")
-	if err != nil {
-		log.Fatalf("Failed to establish connection to RabbitMQ: %v", err)
-	}
+	conn, ch := rabbitmq.ConnectRabbitmq()
 	defer conn.Close()
-
-	// Create a communication channel
-	ch, err := conn.Channel()
-	if err != nil {
-		log.Fatalf("Failed to open channel: %v", err)
-	}
 	defer ch.Close()
 
 	// Declare a queue
 	queueName := "my_queue"
-	_, err = ch.QueueDeclare(queueName, false, false, false, false, nil)
-	if err != nil {
-		log.Fatalf("Failed to declare the queue: %v", err)
-	}
+	_, err := ch.QueueDeclare(queueName, false, false, false, false, nil)
+	error.ValidateError("Failed to declare the queue", err)
 
 	// Consume messages from the queue
 	msgs, err := ch.Consume(queueName, "", true, false, false, false, nil)
-	if err != nil {
-		log.Fatalf("Failed to consume messages: %v", err)
-	}
+
+	error.ValidateError("Failed to consume messages", err)
 
 	// Process received messages
 	for msg := range msgs {
-		fmt.Printf("Received message: %s\n", msg.Body)
+		logs.WriteLogFile("INFO", "Channel opened")
+		logs.WriteLogFile("INFO", "Received message: "+string(msg.Body))
 	}
 }
