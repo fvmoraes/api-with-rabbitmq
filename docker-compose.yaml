@@ -59,7 +59,7 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "9000"
+      - "9001"
     networks:
       backend:
         ipv4_address: 172.34.0.5
@@ -76,13 +76,29 @@ services:
     restart: unless-stopped
     tty: true
     ports:
-      - "9000"
+      - "9002"
     networks:
       backend:
         ipv4_address: 172.34.0.6
     depends_on:
       - postgres
       - rabbitmq
+#go-app-api
+  appapi:
+    build:
+      context: .
+      dockerfile: build/foobarapi.Dockerfile
+    image: foobarapi
+    container_name: foobarapi_api-with-rabbitmq
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "9000:9000"
+    networks:
+      backend:
+        ipv4_address: 172.34.0.7
+    depends_on:
+      - postgres
 
 networks:
   backend:

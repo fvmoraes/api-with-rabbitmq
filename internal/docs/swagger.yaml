@@ -1,0 +1,172 @@
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  models.Foobar:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        type: integer
+      message:
+        maxLength: 60
+        type: string
+      registration:
+        minimum: 8
+        type: integer
+      updatedAt:
+        type: string
+      what:
+        maxLength: 30
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /foobar:
+    get:
+      consumes:
+      - application/json
+      description: Shown all Foobar in database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Foobar'
+      summary: Showning all Foobar
+      tags:
+      - foobar
+    post:
+      consumes:
+      - application/json
+      description: Create Foobar in database
+      parameters:
+      - description: Foobar Data
+        in: body
+        name: foobar
+        required: true
+        schema:
+          $ref: '#/definitions/models.Foobar'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Foobar'
+      summary: Creating Foobar
+      tags:
+      - foobar
+  /foobar/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete Foobar by ID in database
+      parameters:
+      - description: Foobar ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Foobar'
+      summary: Deleting Foobar by ID
+      tags:
+      - foobar
+    get:
+      consumes:
+      - application/json
+      description: Shown Foobar by ID in database
+      parameters:
+      - description: Foobar ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Foobar'
+      summary: Showning Foobar by ID
+      tags:
+      - foobar
+    patch:
+      consumes:
+      - application/json
+      description: Edit Foobar by ID in database
+      parameters:
+      - description: Foobar ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Foobar Data
+        in: body
+        name: foobar
+        required: true
+        schema:
+          $ref: '#/definitions/models.Foobar'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Foobar'
+      summary: Editing Foobar by ID
+      tags:
+      - foobar
+  /foobar/{reg}:
+    get:
+      consumes:
+      - application/json
+      description: Shown Foobar by Registration in database
+      parameters:
+      - description: Foobar Registration
+        in: path
+        name: reg
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Foobar'
+      summary: Showning Foobar by Registration
+      tags:
+      - foobar
+  /foobar/mock:
+    get:
+      consumes:
+      - application/json
+      description: Shown all Foobar Mocks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Foobar'
+      summary: Showning all Foobar Mocks
+      tags:
+      - foobar
+swagger: "2.0"
