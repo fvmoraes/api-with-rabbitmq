@@ -1,13 +1,16 @@
 package controllers
 
 import (
+	"encoding/json"
 	"net/http"
 	"strconv"
 
+	"github.com/fvmoraes/api-with-rabbitmq/internal/consumer"
 	"github.com/fvmoraes/api-with-rabbitmq/internal/helpers"
 	"github.com/fvmoraes/api-with-rabbitmq/internal/initializers"
 	"github.com/fvmoraes/api-with-rabbitmq/internal/logs"
 	"github.com/fvmoraes/api-with-rabbitmq/internal/models"
+	"github.com/fvmoraes/api-with-rabbitmq/internal/publisher"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,8 +41,24 @@ func CreateFoobar(c *gin.Context) {
 		logs.WriteLogFile("WARNING", err.Error())
 		return
 	}
-	initializers.DB.Create(&foobar)
-	c.JSON(http.StatusOK, foobar)
+	publisher.PublishMessage(&foobar, "create")
+	// ainda nao consegui ajustar para pegar varias mensagens e tratar uma a uma,
+	//gravando na database, nem consegui fazer um teste de conexão, como comentado abaixo, sempre considera false
+	// if initializers.DBStatus {
+	consumedMessages := consumer.ConsumeMessages("create")
+	for msg := range consumedMessages {
+		var foobar models.Foobar
+		err := json.Unmarshal(msg, &foobar)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"Error": "Failed to parse consumed message",
+			})
+			return
+		}
+		initializers.DB.Create(&foobar)
+		c.JSON(http.StatusOK, foobar)
+	}
+	// }
 	logs.WriteLogFile("INFO", "Successful call to endpoint: "+""+c.Request.Method+""+c.Request.RequestURI)
 }
 

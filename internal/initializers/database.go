@@ -8,6 +8,7 @@ import (
 )
 
 var DB *gorm.DB
+var DBStatus bool
 var err error
 
 func StartDatabaseConnect() {
@@ -15,6 +16,6 @@ func StartDatabaseConnect() {
 	DB, err = gorm.Open(postgres.Open(connectionString))
 	if err != nil {
 		log.Panic("Database Connection Error", err)
+		DBStatus = true
 	}
-
 }
